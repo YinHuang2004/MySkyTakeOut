@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.SetmealMapper">
+<<<<<<< HEAD
+    <select id="countByCategoryId" resultType="java.lang.Integer">
+        select count(id) from setmeal where category_id = #{categoryId}
+    </select>
+    <insert id="insert" parameterType="Setmeal" useGeneratedKeys="true" keyProperty="id">
+        insert into setmeal
+        (category_id, name, price, status, description, image, create_time, update_time, create_user, update_user)
+        values (#{categoryId}, #{name}, #{price}, #{status}, #{description}, #{image}, #{createTime}, #{updateTime},
+                #{createUser}, #{updateUser})
+    </insert>
+    <select id="pageQuery" resultType="com.sky.vo.SetmealVO">
+        select
+        s.*,c.name categoryName
+        from
+        setmeal s
+        left join
+        category c
+        on
+        s.category_id = c.id
+        <where>
+            <if test="name != null">
+                and s.name like concat('%',#{name},'%')
+            </if>
+            <if test="status != null">
+                and s.status = #{status}
+            </if>
+            <if test="categoryId != null">
+                and s.category_id = #{categoryId}
+            </if>
+        </where>
+        order by s.create_time desc
+    </select>
+    <select id="countOnsaleSetmeal" resultType="java.lang.Long">
+        select count(*) from setmeal where status=1
+        and id in<foreach collection="list" item="id" separator="," open="(" close=")">
+        #{id}
+    </foreach>
+    </select>
+    <delete id="deleteBatch">
+        delete from setmeal
+        where id in <foreach collection="list" item="id" separator="," open="(" close=")">
+        #{id}
+    </foreach>
+    </delete>
+    <select id="getById" resultType="com.sky.entity.Setmeal">
+        select * from setmeal where id=#{id}
+    </select>
+    <update id="update">
+        update setmeal
+        <set>
+            <if test="name!=null">name=#{name},</if>
+            <if test="price!=null">price=#{price},</if>
+            <if test="image!=null">image=#{image},</if>
+            <if test="categoryId!=null">category_id=#{categoryId},</if>
+            <if test="description!=null">description=#{description},</if>
+            <if test="status!=null">status=#{status},</if>
+            <if test="updateTime!=null">update_time=#{updateTime},</if>
+            <if test="updateUser!=null">update_user=#{updateUser},</if>
+        </set>
+            where id=#{id}
+    </update>
+</mapper>
+
+
+=======
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into setmeal
+        values(null,#{categoryId},#{name},#{price},#{#status},#{description},#{image},#{createTime},#{updateTime},#{createUser},#{updateUser})
+    </insert>
+    <select id="countByCategoryId" resultType="java.lang.Long">
+        select count(*) from setmeal where category_id = #{categoryId}
+    </select>
+    <select id="getTotal" resultType="java.lang.Long">
+        select count(*) from setmeal
+    </select>
+    <select id="pageQuery" resultType="com.sky.vo.SetmealVO">
+        select sm.*,cg.name categoryName
+        from setmeal sm
+        left join category cg
+        on sm.category_id=cg.id
+        <where>
+            <if test="name!=null">sm.name like concat('%',#{name},'%')</if>
+            <if test="categoryId!=null">and sm.category_id=#{categoryId}</if>
+            <if test="status!=null">and sm.status=#{status}</if>
+        </where>
+        order by sm.create_time desc
+        limit #{page},#{pageSize}
+    </select>
+    <select id="countOnSaleByIds" resultType="java.lang.Long">
+        select count(*) from setmeal where status=1
+    </select>
+    <delete id="deleteBatch">
+        delete from setmeal where id in <foreach collection="list" item="id" open="(" close=")" separator=",">
+        #{id}
+    </foreach>
+    </delete>
+
+</mapper>
+>>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
