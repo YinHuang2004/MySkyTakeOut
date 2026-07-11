@@ -9,19 +9,15 @@ import com.sky.vo.DishVO;
 import java.util.List;
 
 public interface DishService {
-<<<<<<< HEAD
 
     /**
      * 新增菜品和对应的口味
-     *
      * @param dishDTO
      */
-    public void saveWithFlavor(DishDTO dishDTO);
-
+    void saveWithFlavor(DishDTO dishDTO);
 
     /**
      * 菜品分页查询
-     *
      * @param dishPageQueryDTO
      * @return
      */
@@ -29,14 +25,12 @@ public interface DishService {
 
     /**
      * 菜品批量删除
-     *
      * @param ids
      */
     void deleteBatch(List<Long> ids);
 
     /**
-     * 根据id查询菜品和对应的口味数据
-     *
+     * 根据id查询菜品和对应的口味
      * @param id
      * @return
      */
@@ -44,37 +38,27 @@ public interface DishService {
 
     /**
      * 根据id修改菜品基本信息和对应的口味信息
-     *
      * @param dishDTO
      */
     void updateWithFlavor(DishDTO dishDTO);
 
     /**
-     * 修改菜品售卖状态
+     * 菜品起售、停售
      * @param status
+     * @param id
      */
-    void startOrStop(Integer status);
+    void startOrStop(Integer status, Long id);
 
     /**
-     * 根据分类查询查询菜品
+     * 根据分类id查询菜品
      * @param categoryId
      * @return
      */
     List<Dish> getDishByCategoryId(Long categoryId);
+    /**
+     * 根据分类id查询菜品和口味
+     * @param categoryId
+     * @return
+     */
+    List<DishVO> listWithFlavor(Long categoryId);
 }
-=======
-    void saveWithFlavor(DishDTO dishDTO);
-
-    PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO);
-
-    void deleteBatch(List<Long> ids);
-
-    DishVO getInfoById(Long id);
-
-    void update(DishDTO dishDTO);
-
-    void startOrStop(Integer status,Long id);
-
-    List<Dish> getDishByCageId(Long categoryId);
-}
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6

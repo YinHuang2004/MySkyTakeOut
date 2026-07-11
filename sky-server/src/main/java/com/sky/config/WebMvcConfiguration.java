@@ -1,6 +1,7 @@
 package com.sky.config;
 
 import com.sky.interceptor.JwtTokenAdminInterceptor;
+import com.sky.interceptor.JwtTokenUserInterceptor;
 import com.sky.json.JacksonObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,24 +30,27 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
     @Autowired
     private JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
+    @Autowired
+    private JwtTokenUserInterceptor jwtTokenUserInterceptor;
 
     /**
      * 注册自定义拦截器
      *
      * @param registry
      */
+    @Override
     protected void addInterceptors(InterceptorRegistry registry) {
         log.info("开始注册自定义拦截器...");
-<<<<<<< HEAD
         registry.addInterceptor(jwtTokenAdminInterceptor)
                 .addPathPatterns("/admin/**")
                 .excludePathPatterns("/admin/employee/login");
-=======
-//        registry.addInterceptor(jwtTokenAdminInterceptor)
-//                .addPathPatterns("/admin/**")
-//                .excludePathPatterns("/admin/employee/login");
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
+        registry.addInterceptor(jwtTokenUserInterceptor)
+                .addPathPatterns("/user/**")
+                .excludePathPatterns("/user/user/login")
+                //查看商店状态发生早于用户登陆状态
+                .excludePathPatterns("/user/shop/status");
     }
+
 
     /**
      * 通过knife4j生成接口文档
@@ -72,6 +76,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
      * 设置静态资源映射
      * @param registry
      */
+    @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
@@ -81,6 +86,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
      * 扩展Spring MVC框架的消息转化器
      * @param converters
      */
+    @Override
     protected void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         log.info("扩展消息转换器...");
         //创建一个消息转换器对象
@@ -91,8 +97,4 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         converters.add(0,converter);
     }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
 }

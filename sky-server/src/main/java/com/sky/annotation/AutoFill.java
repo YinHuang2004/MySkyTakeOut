@@ -11,8 +11,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AutoFill {
     OperationType value();
-<<<<<<< HEAD
-=======
 
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
 }

@@ -35,10 +35,6 @@ public class DishVO implements Serializable {
     //分类名称
     private String categoryName;
     //菜品关联的口味
-<<<<<<< HEAD
-=======
-    //这里为什么要返回口味，是因为修改回显时需要可以修改它的口味
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
     private List<DishFlavor> flavors = new ArrayList<>();
 
     //private Integer copies;

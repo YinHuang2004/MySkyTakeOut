@@ -16,6 +16,7 @@ import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.SetmealService;
+import com.sky.vo.DishItemVO;
 import com.sky.vo.SetmealVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -32,7 +33,6 @@ import java.util.List;
 @Service
 @Slf4j
 public class SetmealServiceImpl implements SetmealService {
-
     @Autowired
     private SetmealMapper setmealMapper;
     @Autowired
@@ -45,7 +45,7 @@ public class SetmealServiceImpl implements SetmealService {
      * @param setmealDTO
      */
     @Transactional
-    public void saveWithDish(SetmealDTO setmealDTO) {
+    public void save(SetmealDTO setmealDTO) {
         Setmeal setmeal = new Setmeal();
         BeanUtils.copyProperties(setmealDTO, setmeal);
 
@@ -56,13 +56,16 @@ public class SetmealServiceImpl implements SetmealService {
         Long setmealId = setmeal.getId();
 
         List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
-        setmealDishes.forEach(setmealDish -> {
-            setmealDish.setSetmealId(setmealId);
-        });
+        if (setmealDishes != null && setmealDishes.size() > 0) {
+            setmealDishes.forEach(setmealDish -> {
+                setmealDish.setSetmealId(setmealId);
+            });
 
-        //保存套餐和菜品的关联关系
-        setmealDishMapper.insertBatch(setmealDishes);
+            //保存套餐和菜品的关联关系
+            setmealDishMapper.insertBatch(setmealDishes);
+        }
     }
+
     /**
      * 分页查询
      * @param setmealPageQueryDTO
@@ -76,31 +79,31 @@ public class SetmealServiceImpl implements SetmealService {
         Page<SetmealVO> page = setmealMapper.pageQuery(setmealPageQueryDTO);
         return new PageResult(page.getTotal(), page.getResult());
     }
+
     /**
      * 批量删除套餐
      * @param ids
      */
     @Transactional
     public void deleteBatch(List<Long> ids) {
-
         //如果套餐在售，则不允许删除
-        Long countOnSaleSetmeal=setmealMapper.countOnSaleSetmeal(ids);
-        if(countOnSaleSetmeal>0){
+        Long countOnSaleSetmeal = setmealMapper.countOnSaleSetmeal(ids);
+        if (countOnSaleSetmeal > 0) {
             //起售中的套餐不能删除
             throw new DeletionNotAllowedException(MessageConstant.SETMEAL_ON_SALE);
         }
-        //删除该套餐
+        //删除套餐表中的数据
         setmealMapper.deleteBatch(ids);
-        //解除该套餐与菜品的关系
+        //删除套餐菜品关系表中的数据
         setmealDishMapper.deleteBySetmealIds(ids);
     }
+
     /**
      * 根据id查询套餐和套餐菜品关系
-     *
      * @param id
      * @return
      */
-    public SetmealVO getByIdWithDish(Long id) {
+    public SetmealVO getById(Long id) {
         Setmeal setmeal = setmealMapper.getById(id);
         List<SetmealDish> setmealDishes = setmealDishMapper.getBySetmealId(id);
 
@@ -113,7 +116,6 @@ public class SetmealServiceImpl implements SetmealService {
 
     /**
      * 修改套餐
-     *
      * @param setmealDTO
      */
     @Transactional
@@ -130,15 +132,15 @@ public class SetmealServiceImpl implements SetmealService {
         //2、删除套餐和菜品的关联关系
         setmealDishMapper.deleteBySetmealIds(Arrays.asList(setmealId));
 
+        //3、重新插入套餐和菜品的关联关系
         List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
-        //为新增的菜品增加套餐关联
-        setmealDishes.forEach(setmealDish -> {
-            setmealDish.setSetmealId(setmealId);
-        });
-        //3、重新插入套餐和菜品的关联关系，操作setmeal_dish表，执行insert
-        setmealDishMapper.insertBatch(setmealDishes);
+        if (setmealDishes != null && setmealDishes.size() > 0) {
+            setmealDishes.forEach(setmealDish -> {
+                setmealDish.setSetmealId(setmealId);
+            });
+            setmealDishMapper.insertBatch(setmealDishes);
+        }
     }
-
 
     /**
      * 套餐起售、停售
@@ -147,14 +149,16 @@ public class SetmealServiceImpl implements SetmealService {
      */
     public void startOrStop(Integer status, Long id) {
         //起售套餐时，判断套餐内是否有停售菜品，有停售菜品提示"套餐内包含未启售菜品，无法启售"
-        if(status == StatusConstant.ENABLE){
-            List<Dish> dishByCategoryId = dishMapper.getDishByCategoryId(id);
-            if(dishByCategoryId != null && dishByCategoryId.size() > 0){
-                dishByCategoryId.forEach(dish -> {
-                    if(StatusConstant.DISABLE == dish.getStatus()){
+        if (status == StatusConstant.ENABLE) {
+            //查询套餐中包含的菜品列表
+            List<SetmealDish> setmealDishes = setmealDishMapper.getBySetmealId(id);
+            if (setmealDishes != null && setmealDishes.size() > 0) {
+                for (SetmealDish setmealDish : setmealDishes) {
+                    Dish dish = dishMapper.getById(setmealDish.getDishId());
+                    if (dish != null && StatusConstant.DISABLE == dish.getStatus()) {
                         throw new SetmealEnableFailedException(MessageConstant.SETMEAL_ENABLE_FAILED);
                     }
-                });
+                }
             }
         }
 
@@ -163,5 +167,22 @@ public class SetmealServiceImpl implements SetmealService {
                 .status(status)
                 .build();
         setmealMapper.update(setmeal);
+    }
+    /**
+     * 条件查询
+     * @param setmeal
+     * @return
+     */
+    public List<Setmeal> list(Setmeal setmeal) {
+        List<Setmeal> list = setmealMapper.list(setmeal);
+        return list;
+    }
+    /**
+     * 根据id查询菜品选项
+     * @param id
+     * @return
+     */
+    public List<DishItemVO> getDishItemById(Long id) {
+        return setmealMapper.getDishItemBySetmealId(id);
     }
 }

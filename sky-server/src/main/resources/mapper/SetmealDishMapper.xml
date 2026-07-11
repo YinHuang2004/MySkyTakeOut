@@ -2,54 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.SetmealDishMapper">
-<<<<<<< HEAD
+
+    <!-- 根据菜品id集合统计关联的套餐数量 -->
     <select id="countRelateSetmeal" resultType="java.lang.Long">
         select count(*)
         from setmeal_dish
-        where dish_id in <foreach collection="list" item="dishId" separator="," open="(" close=")">
-        #{dishId}
-    </foreach>
+        where dish_id in
+        <foreach collection="list" item="dishId" separator="," open="(" close=")">
+            #{dishId}
+        </foreach>
     </select>
-    <insert id="insertBatch" parameterType="list">
-        insert into setmeal_dish
-        (setmeal_id,dish_id,name,price,copies)
+
+    <!-- 批量插入套餐菜品关系 -->
+    <insert id="insertBatch">
+        insert into setmeal_dish (setmeal_id, dish_id, name, price, copies)
         values
-        <foreach collection="setmealDishes" item="sd" separator=",">
-            (#{sd.setmealId},#{sd.dishId},#{sd.name},#{sd.price},#{sd.copies})
+        <foreach collection="list" item="sd" separator=",">
+            (#{sd.setmealId}, #{sd.dishId}, #{sd.name}, #{sd.price}, #{sd.copies})
         </foreach>
     </insert>
+
+    <!-- 根据套餐id集合批量删除套餐菜品关系 -->
     <delete id="deleteBySetmealIds">
         delete from setmeal_dish
-        where setmeal_id in <foreach collection="list" item="setmealId" separator="," open="(" close=")">
-        #{setmealId}
-    </foreach>
-    </delete>
-    <select id="getBySetmealId" resultType="com.sky.entity.SetmealDish">
-        select * from setmeal_dish where setmeal_id=#{id}
-    </select>
-=======
-    <select id="getSetmealIdsByDishIds" resultType="java.lang.Long">
-        select
-            setmeal_id
-        from setmeal_dish
-            dish_id in
-            <foreach collection="list" item="id" open="(" close=")" separator=",">
-                #{id}
-            </foreach>
-    </select>
-<!--    一个套餐有多个菜品记得要加循环-->
-    <insert id="insertBatch">
-        insert into setmeal_dish(setmeal_id,dish_id,name,price,copies)
-        values
-            <foreach collection="list" item="sd" separator=",">(#{sd.setmealId},#{sd.dishId},#{sd.name},#{sd.price},#{sd.copies})</foreach>
-
-
-    </insert>
-    <delete id="deleteBatch">
-        delete from setmeal_dish where setmeal_id in
-        <foreach collection="list" item="setMealId" separator="," open="(" close=")">
-            #{setMealId}
+        where setmeal_id in
+        <foreach collection="list" item="setmealId" separator="," open="(" close=")">
+            #{setmealId}
         </foreach>
     </delete>
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
+
+    <!-- 根据套餐id查询套餐菜品关系 -->
+    <select id="getBySetmealId" resultType="com.sky.entity.SetmealDish">
+        select * from setmeal_dish where setmeal_id = #{setmealId}
+    </select>
+
 </mapper>

@@ -2,35 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.DishFlavorMapper">
+
     <insert id="insertBatch">
-<<<<<<< HEAD
         insert into dish_flavor (dish_id, name, value) VALUES
         <foreach collection="flavors" item="df" separator=",">
             (#{df.dishId},#{df.name},#{df.value})
         </foreach>
     </insert>
-    <delete id="deleteByDishIds" >
-        delete from dish_flavor
-        where dish_id in <foreach collection="list" item="dishId" separator="," open="(" close=")">
-        #{dishId}
-    </foreach>
-    </delete>
-    <select id="getByDishId" resultType="com.sky.entity.DishFlavor">
-        select * from dish_flavor where dish_id = #{dishId}
-=======
-        insert into dish_flavor(dish_id,name,value)
-        values
-        <foreach collection="list" item="df" separator=",">
-            (#{df.dishId},#{df.name},#{df.value})
-        </foreach>
-    </insert>
+
     <delete id="deleteByDishIds">
-        delete from dish_flavor where dish_id in <foreach collection="list" item="id" open="(" close=")" separator="," >
-        #{id}
-    </foreach>
+        delete from dish_flavor
+        where dish_id in
+        <foreach collection="list" item="dishId" separator="," open="(" close=")">
+            #{dishId}
+        </foreach>
     </delete>
-    <select id="getInfoByDishId" resultType="com.sky.entity.DishFlavor">
-        select * from dish_flavor where dish_id=#{id}
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
+
+    <select id="getByDishIds" resultType="com.sky.entity.DishFlavor">
+        select * from dish_flavor where dish_id in
+        <foreach collection="list" item="dishId" separator="," open="(" close=")">
+            #{dishId}
+        </foreach>
     </select>
+
 </mapper>

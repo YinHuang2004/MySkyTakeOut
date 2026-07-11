@@ -4,10 +4,7 @@ import com.sky.constant.JwtClaimsConstant;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
-<<<<<<< HEAD
 import com.sky.dto.PasswordEditDTO;
-=======
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
 import com.sky.entity.Employee;
 import com.sky.properties.JwtProperties;
 import com.sky.result.PageResult;
@@ -50,7 +47,6 @@ public class EmployeeController {
 
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
-<<<<<<< HEAD
         claims.put(JwtClaimsConstant.EMP_ID, employee.getId());//放员工id到jwt令牌中，key为员工属性id，value为员工id值
         //传进来的配置项用java对象封装
         String token = JwtUtil.createJWT(
@@ -60,23 +56,10 @@ public class EmployeeController {
 
         EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()
                 //将员工id、用户名、姓名、jwt令牌通过方法封装到EmployeeLoginVO对象中，只是方法名与属性名一致（前提是添加builder注解）
-=======
-        claims.put(JwtClaimsConstant.EMP_ID, employee.getId());
-        String token = JwtUtil.createJWT(
-                jwtProperties.getAdminSecretKey(),
-                jwtProperties.getAdminTtl(),
-                claims);
-
-        EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
                 .id(employee.getId())
                 .userName(employee.getUsername())
                 .name(employee.getName())
                 .token(token)
-<<<<<<< HEAD
-                //setter后调用build方法创建对象，是java的一种设计模式
-=======
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
                 .build();
 
         return Result.success(employeeLoginVO);
@@ -93,12 +76,6 @@ public class EmployeeController {
     }
 
 
-<<<<<<< HEAD
-    @PostMapping
-    @ApiOperation("新增员工")
-    public Result save(@RequestBody EmployeeDTO employeeDTO){
-        log.info("新增员工：{}",employeeDTO);
-=======
     /**
      * 新增员工
      *
@@ -108,13 +85,11 @@ public class EmployeeController {
     @PostMapping
     @ApiOperation("新增员工")
     public Result save(@RequestBody EmployeeDTO employeeDTO) {
-        log.info("新增员工,employeeDTO:{}",employeeDTO);
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
+        log.info("新增员工,employeeDTO:{}", employeeDTO);
         employeeService.save(employeeDTO);
         return Result.success();
     }
 
-<<<<<<< HEAD
     /**
      * 员工分页查询
      * @param employeePageQueryDTO
@@ -122,12 +97,11 @@ public class EmployeeController {
      */
     @GetMapping("/page")
     @ApiOperation("员工分页查询")
-    public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO){
+    public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO) {
         log.info("员工分页查询，参数为：{}", employeePageQueryDTO);
         PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
     }
-
 
     /**
      * 启用禁用员工账号
@@ -137,43 +111,25 @@ public class EmployeeController {
      */
     @PostMapping("/status/{status}")
     @ApiOperation("启用禁用员工账号")
-    public Result startOrStop(@PathVariable Integer status,Long id){
-        log.info("启用禁用员工账号：状态：{},id：{}",status,id);
-=======
-
-    /**
-     * 员工分页查询
-     */
-    @GetMapping("/page")
-    @ApiOperation("员工分页查询")
-    public Result<PageResult>page(EmployeePageQueryDTO employeePageQueryDTO){
-        log.info("员工分页查询，参数为：{}", employeePageQueryDTO);
-        PageResult pageResult=employeeService.pageQuery(employeePageQueryDTO);
-        return Result.success(pageResult);
-    }
-    @PostMapping("/status/{status}")
-    public Result startOrStop(@PathVariable Integer status,Long id){
-        log.info("修改员工状态为：{}",status);
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
-        employeeService.startOrStop(status,id);
+    public Result startOrStop(@PathVariable Integer status, Long id) {
+        log.info("启用禁用员工账号：状态：{},id：{}", status, id);
+        employeeService.startOrStop(status, id);
         return Result.success();
     }
-
-<<<<<<< HEAD
 
     /**
      * 根据id回显数据
      * @param id
      * @return
      */
-
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     @ApiOperation("根据id回显数据")
-    public Result<Employee> getInfoById(@PathVariable Long id){
-        log.info("根据id回显数据:{}",id);
-        Employee employee=employeeService.getInfoById(id);
+    public Result<Employee> getInfoById(@PathVariable Long id) {
+        log.info("根据id回显数据:{}", id);
+        Employee employee = employeeService.getInfoById(id);
         return Result.success(employee);
     }
+
     /**
      * 编辑员工信息
      * @param employeeDTO
@@ -181,32 +137,22 @@ public class EmployeeController {
      */
     @PutMapping
     @ApiOperation("编辑员工信息")
-    public Result update(@RequestBody EmployeeDTO employeeDTO){
+    public Result update(@RequestBody EmployeeDTO employeeDTO) {
         log.info("编辑员工信息：{}", employeeDTO);
         employeeService.update(employeeDTO);
         return Result.success();
     }
+
+    /**
+     * 修改员工密码
+     * @param passwordEditDTO
+     * @return
+     */
     @PutMapping("/editPassword")
     @ApiOperation("修改员工密码")
-    public Result editPassword(@RequestBody PasswordEditDTO passwordEditDTO){
-        log.info("修改员工密码:{}",passwordEditDTO);
+    public Result editPassword(@RequestBody PasswordEditDTO passwordEditDTO) {
+        log.info("修改员工密码:{}", passwordEditDTO);
         employeeService.editPassword(passwordEditDTO);
         return Result.success();
     }
-=======
-    @GetMapping("/{id}")
-    public Result<Employee> getById(@PathVariable Long id){
-        log.info("根据id查询员工信息，id值为:{}",id);
-        Employee employee=employeeService.getById(id);
-        return Result.success(employee);
-    }
-
-
-    @PutMapping
-    public Result update(@RequestBody EmployeeDTO employeeDTO){
-        log.info("更新员工信息,更新后的数据为:{}",employeeDTO);
-        employeeService.update(employeeDTO);
-        return Result.success();
-    }
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
 }

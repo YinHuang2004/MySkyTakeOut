@@ -1,24 +1,12 @@
 package com.sky.mapper;
 
-<<<<<<< HEAD
 import com.github.pagehelper.Page;
 import com.sky.annotation.AutoFill;
 import com.sky.dto.EmployeePageQueryDTO;
-import com.sky.dto.PasswordEditDTO;
-=======
-import com.sky.annotation.AutoFill;
-import com.sky.dto.EmployeePageQueryDTO;
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
 import com.sky.entity.Employee;
 import com.sky.enumeration.OperationType;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 
-<<<<<<< HEAD
-=======
-import java.util.List;
-
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
 @Mapper
 public interface EmployeeMapper {
 
@@ -27,30 +15,39 @@ public interface EmployeeMapper {
      * @param username
      * @return
      */
-
     Employee getByUsername(String username);
-<<<<<<< HEAD
-    @AutoFill(OperationType.INSERT)
+
+    /**
+     * 插入员工数据
+     * @param employee
+     */
+    @AutoFill(value = OperationType.INSERT)
     void insert(Employee employee);
 
+    /**
+     * 员工分页查询
+     * @param employeePageQueryDTO
+     * @return
+     */
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
-    @AutoFill(OperationType.UPDATE)
-    void update(Employee employee);
 
+    /**
+     * 根据id查询员工
+     * @param id
+     * @return
+     */
     Employee getById(Long id);
 
-=======
-    @AutoFill(value= OperationType.INSERT)
-    void insert(Employee employee);
+    /**
+     * 更新员工信息
+     * @param employee
+     */
+    @AutoFill(value = OperationType.UPDATE)
+    void update(Employee employee);
 
+    /**
+     * 获取员工总数（分页查询辅助）
+     * @return
+     */
     Long getTotal();
-
-    List<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
-
-
-
-    Employee getById(Long id);
-    @AutoFill(value= OperationType.UPDATE)
-    void update(Employee employee);
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
 }

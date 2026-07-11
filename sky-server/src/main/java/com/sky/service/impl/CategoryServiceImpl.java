@@ -1,7 +1,5 @@
 package com.sky.service.impl;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
@@ -18,12 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * 分类业务层
- */
 @Service
 @Slf4j
 public class CategoryServiceImpl implements CategoryService {
@@ -41,22 +40,15 @@ public class CategoryServiceImpl implements CategoryService {
      */
     public void save(CategoryDTO categoryDTO) {
         Category category = new Category();
-        //属性拷贝
+        //对象属性拷贝
         BeanUtils.copyProperties(categoryDTO, category);
 
-        //分类状态默认为禁用状态0
-        category.setStatus(StatusConstant.DISABLE);
+        //设置分类状态，默认启用
+        category.setStatus(StatusConstant.ENABLE);
 
-<<<<<<< HEAD
+        //公共字段由AutoFill切面自动填充
 
-=======
-        //设置创建时间、修改时间、创建人、修改人
-//        category.setCreateTime(LocalDateTime.now());
-//        category.setUpdateTime(LocalDateTime.now());
-//        category.setCreateUser(BaseContext.getCurrentId());
-//        category.setUpdateUser(BaseContext.getCurrentId());
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
-
+        //调用持久层，插入数据
         categoryMapper.insert(category);
     }
 
@@ -66,10 +58,14 @@ public class CategoryServiceImpl implements CategoryService {
      * @return
      */
     public PageResult pageQuery(CategoryPageQueryDTO categoryPageQueryDTO) {
-        PageHelper.startPage(categoryPageQueryDTO.getPage(),categoryPageQueryDTO.getPageSize());
-        //下一条sql进行分页，自动加入limit关键字分页
+        PageHelper.startPage(categoryPageQueryDTO.getPage(), categoryPageQueryDTO.getPageSize());
+
         Page<Category> page = categoryMapper.pageQuery(categoryPageQueryDTO);
-        return new PageResult(page.getTotal(), page.getResult());
+
+        long total = page.getTotal();
+        List<Category> records = page.getResult();
+
+        return new PageResult(total, records);
     }
 
     /**
@@ -77,38 +73,20 @@ public class CategoryServiceImpl implements CategoryService {
      * @param id
      */
     public void deleteById(Long id) {
-<<<<<<< HEAD
-        //查询当前分类是否关联了菜品，如果关联了就抛出业务异常
-        Integer count = dishMapper.countByCategoryId(id);
-        if(count > 0){
-=======
-
-        //这个id是一条记录的标识，可能是菜品分类的某一类菜，也可能是套餐分类下的菜品组合，所以我们需要都检查
-        //如果是菜品分类的凉拌菜就检查这个凉拌菜下有没有菜品，有就不能删
-        //如果是套餐分类下的组合菜，检查这个分类有没有菜
-
-
-        //查询当前分类是否关联了菜品，如果关联了就抛出业务异常
-        Long countCategory = dishMapper.countByCategoryId(id);
-        if(countCategory > 0){
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
-            //当前分类下有菜品，不能删除
+        //查询当前分类是否关联了菜品或套餐
+        Integer dishCount = dishMapper.countByCategoryId(id);
+        if (dishCount > 0) {
+            //当前分类关联了菜品，不能删除
             throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH);
         }
 
-        //查询当前分类是否关联了套餐，如果关联了就抛出业务异常
-<<<<<<< HEAD
-        count = setmealMapper.countByCategoryId(id);
-        if(count > 0){
-=======
-        Long countSetmeal = setmealMapper.countByCategoryId(id);
-        if(countSetmeal > 0){
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
-            //当前分类下有菜品，不能删除
+        Integer setmealCount = setmealMapper.countByCategoryId(id);
+        if (setmealCount > 0) {
+            //当前分类关联了套餐，不能删除
             throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
         }
 
-        //删除分类数据
+        //没有关联，可以删除
         categoryMapper.deleteById(id);
     }
 
@@ -118,15 +96,10 @@ public class CategoryServiceImpl implements CategoryService {
      */
     public void update(CategoryDTO categoryDTO) {
         Category category = new Category();
-        BeanUtils.copyProperties(categoryDTO,category);
-<<<<<<< HEAD
-=======
+        BeanUtils.copyProperties(categoryDTO, category);
 
-        //设置修改时间、修改人
-//        category.setUpdateTime(LocalDateTime.now());
-//        category.setUpdateUser(BaseContext.getCurrentId());
+        //公共字段由AutoFill切面自动填充
 
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
         categoryMapper.update(category);
     }
 
@@ -139,13 +112,8 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = Category.builder()
                 .id(id)
                 .status(status)
-                .updateTime(LocalDateTime.now())
-<<<<<<< HEAD
-                .updateUser(BaseContext.getCurrentId())
-=======
-//                .updateUser(BaseContext.getCurrentId())
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
                 .build();
+
         categoryMapper.update(category);
     }
 

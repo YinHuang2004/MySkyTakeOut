@@ -23,19 +23,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler
     public Result exceptionHandler(BaseException ex){
-<<<<<<< HEAD
         log.error("异常信息：{}", ex.getMessage());
         return Result.error(ex.getMessage());
     }
 
-
-
-=======
-
-        log.error("异常信息：{}", ex.getMessage());
-        return Result.error(ex.getMessage());
-    }
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
     /**
      * 处理SQL异常
      * @param ex
@@ -54,5 +45,4 @@ public class GlobalExceptionHandler {
             return Result.error(MessageConstant.UNKNOWN_ERROR);
         }
     }
-
 }

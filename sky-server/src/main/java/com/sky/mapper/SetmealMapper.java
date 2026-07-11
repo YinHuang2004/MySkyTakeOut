@@ -1,18 +1,13 @@
 package com.sky.mapper;
 
-<<<<<<< HEAD
 import com.github.pagehelper.Page;
 import com.sky.annotation.AutoFill;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.enumeration.OperationType;
-=======
-import com.sky.dto.SetmealPageQueryDTO;
-import com.sky.entity.Setmeal;
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
+import com.sky.vo.DishItemVO;
 import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -20,53 +15,64 @@ import java.util.List;
 public interface SetmealMapper {
 
     /**
-<<<<<<< HEAD
-     * 根据分类id查询套餐的数量
-     * @param id
+     * 根据分类id查询套餐数量
+     * @param categoryId
      * @return
      */
-    Integer countByCategoryId(Long id);
+    Integer countByCategoryId(Long categoryId);
 
     /**
-     * 新增套餐
+     * 插入套餐数据
      * @param setmeal
      */
-    @AutoFill(OperationType.INSERT)
+    @AutoFill(value = OperationType.INSERT)
     void insert(Setmeal setmeal);
 
-
     /**
-     * 分页查询
+     * 套餐分页查询
      * @param setmealPageQueryDTO
      * @return
      */
     Page<SetmealVO> pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
 
+    /**
+     * 统计在售套餐数量（根据id集合）
+     * @param ids
+     * @return
+     */
     Long countOnSaleSetmeal(List<Long> ids);
 
+    /**
+     * 批量删除套餐
+     * @param ids
+     */
     void deleteBatch(List<Long> ids);
 
-    Setmeal getById(Long id);
-
-    @AutoFill(OperationType.UPDATE)
-    void update(Setmeal setmeal);
-}
-=======
-     * 根据分类id查询套餐下菜品的数量
-     * 根据分类
+    /**
+     * 根据id查询套餐
      * @param id
      * @return
      */
-    Long countByCategoryId(Long id);
+    Setmeal getById(Long id);
 
-    void insert(Setmeal setmeal);
+    /**
+     * 根据id动态修改套餐数据
+     * @param setmeal
+     */
+    @AutoFill(value = OperationType.UPDATE)
+    void update(Setmeal setmeal);
+    /**
+     * 动态条件查询套餐
+     * @param setmeal
+     * @return
+     */
+    List<Setmeal> list(Setmeal setmeal);
 
-    Long getTotal(SetmealDishMapper setmealDishMapper);
-//需要查询多张表，所以需要用到多表查询，已经用vo封装好了
-    List<SetmealVO> pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
+    /**
+     * 根据套餐id查询菜品选项
+     * @param setmealId
+     * @return
+     */
 
-    Long countOnSaleByIds(List<Long> ids);
-
-    void deleteBatch(List<Long> ids);
+    List<DishItemVO> getDishItemBySetmealId(Long setmealId);
 }
->>>>>>> 424555f2080e30ea9bb7a8fb209e617ef52310b6
