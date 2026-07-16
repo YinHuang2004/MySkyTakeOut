@@ -64,9 +64,6 @@
         order by sort asc,create_time desc
     </select>
 
-    <!-- 根据分类id查询分类名称 -->
-    <select id="getInfoByCategoryId" resultType="java.lang.String">
-        select name from category where id = #{categoryId}
-    </select>
+
 
 </mapper>

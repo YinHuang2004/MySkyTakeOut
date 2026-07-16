@@ -35,7 +35,7 @@ public interface DishMapper {
     Page<DishVO> pageQuery(DishPageQueryDTO dishPageQueryDTO);
 
     /**
-     * 统计在售菜品数量
+     * 通过菜品ids批量判断是否存在在售菜品
      * @param ids
      * @return
      */

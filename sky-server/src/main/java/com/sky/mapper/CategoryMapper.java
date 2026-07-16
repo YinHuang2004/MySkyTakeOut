@@ -45,10 +45,4 @@ public interface CategoryMapper {
      */
     List<Category> list(Integer type);
 
-    /**
-     * 根据分类id查询分类信息
-     * @param categoryId
-     * @return
-     */
-    String getInfoByCategoryId(Long categoryId);
 }

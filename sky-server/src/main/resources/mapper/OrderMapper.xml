@@ -65,5 +65,15 @@
         </where>
         order by order_time desc
     </select>
+    <update id="batchCancelByCondition">
+        UPDATE orders
+        SET status = #{status},
+        cancel_reason = #{cancelReason},
+        cancel_time = #{cancelTime}
+        WHERE id IN
+        <foreach collection="list" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
 
 </mapper>

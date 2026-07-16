@@ -50,7 +50,7 @@ public class OrderController {
         log.info("各个状态的订单数量统计");
         return Result.success(orderService.statistics());
     }
-    @GetMapping("/orderDetail/{id}")
+    @GetMapping("/details/{id}")
     @ApiOperation("查询订单详情")
     public Result<OrderVO> details(@PathVariable Long id) {
         log.info("查看订单详情:{}",id);
