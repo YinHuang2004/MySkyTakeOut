@@ -31,11 +31,11 @@ public class JwtUtil {
                 // 如果有私有声明，一定要先设置这个自己创建的私有的声明，这个是给builder的claim赋值，一旦写在标准的声明赋值之后，就是覆盖了那些标准的声明的
                 .setClaims(claims)
                 // 设置签名使用的签名算法和签名使用的秘钥
-                .signWith(signatureAlgorithm, secretKey.getBytes(StandardCharsets.UTF_8))
+                .signWith(signatureAlgorithm, secretKey.getBytes(StandardCharsets.UTF_8))//jwt的signature
                 // 设置过期时间
                 .setExpiration(exp);
 
-        return builder.compact();
+        return builder.compact();//调用compact，框架自动生成header，compact是将三部分进行序列化组装在一起
     }
 
     /**
