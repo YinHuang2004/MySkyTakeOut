@@ -1,7 +1,20 @@
+# ---- Build output ----
 **/target/
-.idea
-*.iml
 *.class
-*Test.java
-**/test/
+
+# ---- IDE ----
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+
+# ---- Logs ----
+*.log
+
+# ---- Local environment config (contains secrets, do NOT commit) ----
 application-dev.yml

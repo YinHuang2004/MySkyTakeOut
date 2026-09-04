@@ -1,0 +1,58 @@
+server:
+  port: 8080
+#激活开发环境，使得application-dev.yml配置项生效
+spring:
+  profiles:
+    active: dev
+  redis:
+    host: ${campus_delivery.redis.host}
+    port: ${campus_delivery.redis.port}
+    password: ${campus_delivery.redis.password}
+    database: ${campus_delivery.redis.database}
+    timeout: 60000
+  main:
+    allow-circular-references: true
+  datasource:
+    druid:
+      driver-class-name: ${campus_delivery.datasource.driver-class-name}
+      url: jdbc:mysql://${campus_delivery.datasource.host}:${campus_delivery.datasource.port}/${campus_delivery.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: ${campus_delivery.datasource.username}
+      password: ${campus_delivery.datasource.password}
+
+mybatis:
+  #mapper配置文件
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.campus_delivery.entity
+  configuration:
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com:
+      campus_delivery:
+        mapper: debug
+        service: info
+        controller: info
+
+campus_delivery:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    admin-secret-key: ${campus_delivery.jwt.admin-secret-key}
+    # 设置jwt过期时间
+    admin-ttl: 7200000
+    # 设置前端传递过来的令牌名称
+    admin-token-name: token
+    user-secret-key: ${campus_delivery.jwt.user-secret-key}
+    user-ttl: 7200000
+    user-token-name: authentication
+  wechat:
+    appid: ${campus_delivery.wechat.appid}
+    secret: ${campus_delivery.wechat.secret}
+    mchid: ${campus_delivery.wechat.mchid}
+    mchSerialNo: ${campus_delivery.wechat.mchSerialNo}
+    privateKeyFilePath: ${campus_delivery.wechat.privateKeyFilePath}
+    apiV3Key: ${campus_delivery.wechat.apiV3Key}
+    weChatPayCertFilePath: ${campus_delivery.wechat.weChatPayCertFilePath}
+    notifyUrl: ${campus_delivery.wechat.notifyUrl}
+    refundNotifyUrl: ${campus_delivery.wechat.refundNotifyUrl}
